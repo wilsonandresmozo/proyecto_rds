@@ -10,9 +10,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/cargos', [CargoController::class, 'index']);
-
-
-Route::get('/empleados', [EmpleadoController::class, 'index']);
-
-Route::get('/funciones-cargo', [FuncionCargoController::class, 'index']);
+Route::apiResource('cargos', CargoController::class);
