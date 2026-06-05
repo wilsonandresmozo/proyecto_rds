@@ -1,6 +1,13 @@
 <?php
 
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+
 test('listar empleados', function () {
+
+    $user = User::first();
+
+    Sanctum::actingAs($user);
 
     $response = $this->getJson('/api/empleados');
 
@@ -9,12 +16,22 @@ test('listar empleados', function () {
 
 test('mostrar empleado por id', function () {
 
-    $response = $this->getJson('/api/empleados/1');
+    $user = User::first();
+
+    Sanctum::actingAs($user);
+
+    $empleado = \App\Models\Empleado::first();
+
+$response = $this->getJson('/api/empleados/' . $empleado->id);
 
     $response->assertStatus(200);
 });
 
 test('crear empleado', function () {
+
+    $user = User::first();
+
+    Sanctum::actingAs($user);
 
     $response = $this->postJson('/api/empleados', [
         'nombres' => 'Pedro',
@@ -31,7 +48,13 @@ test('crear empleado', function () {
 
 test('actualizar empleado', function () {
 
-    $response = $this->putJson('/api/empleados/4', [
+    $user = User::first();
+
+    Sanctum::actingAs($user);
+
+    $empleado = \App\Models\Empleado::first();
+
+    $response = $this->putJson('/api/empleados/' . $empleado->id, [
         'nombres' => 'Pedro Andres',
         'apellidos' => 'Gomez',
         'fecha_nacimiento' => '1998-01-01',
@@ -46,7 +69,21 @@ test('actualizar empleado', function () {
 
 test('eliminar empleado', function () {
 
-    $response = $this->deleteJson('/api/empleados/4');
+    $user = User::first();
+
+    Sanctum::actingAs($user);
+
+    $empleado = \App\Models\Empleado::create([
+        'nombres' => 'Temporal',
+        'apellidos' => 'Prueba',
+        'fecha_nacimiento' => '2000-01-01',
+        'fecha_ingreso' => '2026-06-05',
+        'salario' => 1000000,
+        'estado' => 1,
+        'cargo_id' => 1
+    ]);
+
+    $response = $this->deleteJson('/api/empleados/' . $empleado->id);
 
     $response->assertStatus(200);
 });

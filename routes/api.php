@@ -5,13 +5,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CargoController;
 use App\Http\Controllers\Api\EmpleadoController;
 use App\Http\Controllers\Api\FuncionCargoController;
+use App\Http\Controllers\Api\AuthController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('cargos', CargoController::class);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::apiResource('empleados', EmpleadoController::class);
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::apiResource('funciones-cargo', FuncionCargoController::class);
+    Route::apiResource('cargos', CargoController::class);
+
+    Route::apiResource('empleados', EmpleadoController::class);
+
+    Route::apiResource('funciones-cargo', FuncionCargoController::class);
+
+});
