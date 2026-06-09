@@ -19,7 +19,7 @@ class AuthController extends Controller
                 'message' => 'Credenciales incorrectas'
             ], 401);
         }
-
+        $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
