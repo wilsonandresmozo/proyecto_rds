@@ -10,7 +10,7 @@ class EmpleadoController extends Controller
 {
     public function index()
     {
-        return Empleado::all();
+        return Empleado::with('cargo')->paginate(10);
     }
     public function show($id)
     {
@@ -19,6 +19,16 @@ class EmpleadoController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nombres' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'fecha_nacimiento' => 'required|date',
+            'fecha_ingreso' => 'required|date',
+            'salario' => 'required|numeric|min:0',
+            'estado' => 'required|boolean',
+            'cargo_id' => 'required|exists:cargos,id',
+        ]);
+
         $empleado = Empleado::create([
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
@@ -34,6 +44,16 @@ class EmpleadoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nombres' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'fecha_nacimiento' => 'required|date',
+            'fecha_ingreso' => 'required|date',
+            'salario' => 'required|numeric|min:0',
+            'estado' => 'required|boolean',
+            'cargo_id' => 'required|exists:cargos,id',
+        ]);
+        
         $empleado = Empleado::findOrFail($id);
 
         $empleado->update([
@@ -59,5 +79,4 @@ class EmpleadoController extends Controller
             'mensaje' => 'Empleado eliminado correctamente'
         ]);
     }
-    
 }

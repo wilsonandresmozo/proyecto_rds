@@ -10,16 +10,22 @@ class FuncionCargoController extends Controller
 {
     public function index()
     {
-        return FuncionCargo::all();
+        return FuncionCargo::with('cargo')->paginate(10);
     }
 
     public function show($id)
     {
-        return FuncionCargo::findOrFail($id);
+        return FuncionCargo::with('cargo')->findOrFail($id);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'descripcion_funcion' => 'required|string|max:255',
+            'estado' => 'required|boolean',
+            'cargo_id' => 'required|exists:cargos,id',
+        ]);
+
         $funcionCargo = FuncionCargo::create([
             'descripcion_funcion' => $request->descripcion_funcion,
             'estado' => $request->estado,
@@ -31,6 +37,12 @@ class FuncionCargoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'descripcion_funcion' => 'required|string|max:255',
+            'estado' => 'required|boolean',
+            'cargo_id' => 'required|exists:cargos,id',
+        ]);
+
         $funcionCargo = FuncionCargo::findOrFail($id);
 
         $funcionCargo->update([

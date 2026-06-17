@@ -10,16 +10,21 @@ class CargoController extends Controller
 {
     public function index()
     {
-        return Cargo::all();
+        return Cargo::with(['empleados', 'funcionesCargo'])->paginate(10);
     }
 
     public function show($id)
     {
-        return Cargo::findOrFail($id);
+        return Cargo::with(['empleados', 'funcionesCargo'])->findOrFail($id);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nombre_cargo' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255',
+        ]);
+
         $cargo = Cargo::create([
             'nombre_cargo' => $request->nombre_cargo,
             'descripcion' => $request->descripcion,
@@ -30,6 +35,11 @@ class CargoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nombre_cargo' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255',
+        ]);
+
         $cargo = Cargo::findOrFail($id);
 
         $cargo->update([
