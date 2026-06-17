@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use App\Models\Empleado;
 
 test('listar empleados', function () {
 
@@ -20,7 +21,7 @@ test('mostrar empleado por id', function () {
 
     Sanctum::actingAs($user);
 
-    $empleado = \App\Models\Empleado::first();
+    $empleado = Empleado::first();
 
 $response = $this->getJson('/api/empleados/' . $empleado->id);
 
@@ -52,7 +53,7 @@ test('actualizar empleado', function () {
 
     Sanctum::actingAs($user);
 
-    $empleado = \App\Models\Empleado::first();
+    $empleado = Empleado::first();
 
     $response = $this->putJson('/api/empleados/' . $empleado->id, [
         'nombres' => 'Pedro Andres',
@@ -73,7 +74,7 @@ test('eliminar empleado', function () {
 
     Sanctum::actingAs($user);
 
-    $empleado = \App\Models\Empleado::create([
+    $empleado = Empleado::create([
         'nombres' => 'Temporal',
         'apellidos' => 'Prueba',
         'fecha_nacimiento' => '2000-01-01',
